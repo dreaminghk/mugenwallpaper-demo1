@@ -120,7 +120,55 @@
           <rect width="100%" height="100%" fill="white" rx="10" ry="10" />
         </mask>
       </svg>
-      <div id="clock-content-wrapper"></div>
+      <div id="clock-content-wrapper">
+        <div class="flip-clock">
+          <div class="flip-group">
+            <div class="flip-digit" data-digit="h1">
+              <div class="card">
+                <div class="card-face card-face-front">0</div>
+                <div class="card-face card-face-back">1</div>
+              </div>
+            </div>
+            <div class="flip-digit" data-digit="h2">
+              <div class="card">
+                <div class="card-face card-face-front">0</div>
+                <div class="card-face card-face-back">1</div>
+              </div>
+            </div>
+          </div>
+          <div class="separator">:</div>
+          <div class="flip-group">
+            <div class="flip-digit" data-digit="m1">
+              <div class="card">
+                <div class="card-face card-face-front">0</div>
+                <div class="card-face card-face-back">1</div>
+              </div>
+            </div>
+            <div class="flip-digit" data-digit="m2">
+              <div class="card">
+                <div class="card-face card-face-front">0</div>
+                <div class="card-face card-face-back">1</div>
+              </div>
+            </div>
+          </div>
+          <div class="separator">:</div>
+          <div class="flip-group">
+            <div class="flip-digit" data-digit="s1">
+              <div class="card">
+                <div class="card-face card-face-front">0</div>
+                <div class="card-face card-face-back">1</div>
+              </div>
+            </div>
+            <div class="flip-digit" data-digit="s2">
+              <div class="card">
+                <div class="card-face card-face-front">0</div>
+                <div class="card-face card-face-back">1</div>
+              </div>
+            </div>
+          </div>
+          <div class="ampm">AM</div>
+        </div>
+      </div>
     </div>
     <style>
       #clock {
@@ -132,9 +180,6 @@
       }
       #clock-content-wrapper {
         position: relative;
-        color: white;
-        font-size: 72px;
-        font-family: sans-serif;
       }
       .clock-backdrop {
         position: absolute;
@@ -151,16 +196,121 @@
         inset: 0;
         pointer-events: none;
       }
+      .flip-clock {
+        display: flex;
+        align-items: center;
+        font-family: sans-serif;
+        color: white;
+      }
+      .flip-group {
+        display: flex;
+      }
+      .flip-digit {
+        position: relative;
+        width: 60px;
+        height: 90px;
+        perspective: 500px;
+        margin: 0 5px;
+      }
+      .card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.7s;
+      }
+      .card.flipped {
+        transform: rotateX(-180deg);
+      }
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 72px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+      .card-face-front {
+        transform: rotateX(0deg);
+      }
+      .card-face-back {
+        transform: rotateX(180deg);
+      }
+      .separator {
+        font-size: 72px;
+        margin: 0 10px;
+      }
+      .ampm {
+        font-size: 36px;
+        margin-left: 15px;
+      }
     </style>
     <script>
+      const flipDigit = (digitElement, newDigit) => {
+        const card = digitElement.querySelector('.card');
+        const frontFace = card.querySelector('.card-face-front');
+        const backFace = card.querySelector('.card-face-back');
+
+        const isFlipped = card.classList.contains('flipped');
+
+        if (isFlipped) {
+          frontFace.textContent = newDigit;
+        } else {
+          backFace.textContent = newDigit;
+        }
+
+        card.classList.toggle('flipped');
+      };
+
+      let lastTime = '';
+
       function updateClock() {
         const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
+        const hours = now.getHours();
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const seconds = now.getSeconds().toString().padStart(2, '0');
-        const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-        document.getElementById('clock-content-wrapper').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = (hours % 12 || 12).toString().padStart(2, '0');
+
+        const currentTime = `${displayHours}${minutes}${seconds}`;
+
+        if (currentTime !== lastTime) {
+          if (lastTime) {
+            const lastDigits = {
+              h1: lastTime[0], h2: lastTime[1],
+              m1: lastTime[2], m2: lastTime[3],
+              s1: lastTime[4], s2: lastTime[5],
+            };
+            const currentDigits = {
+              h1: currentTime[0], h2: currentTime[1],
+              m1: currentTime[2], m2: currentTime[3],
+              s1: currentTime[4], s2: currentTime[5],
+            };
+
+            for (const digitId in currentDigits) {
+              if (currentDigits[digitId] !== lastDigits[digitId]) {
+                const digitElement = document.querySelector(`[data-digit='${digitId}']`);
+                flipDigit(digitElement, currentDigits[digitId]);
+              }
+            }
+          } else {
+            // First run, just set the initial values
+            document.querySelector('[data-digit="h1"]').querySelector('.card-face-front').textContent = currentTime[0];
+            document.querySelector('[data-digit="h2"]').querySelector('.card-face-front').textContent = currentTime[1];
+            document.querySelector('[data-digit="m1"]').querySelector('.card-face-front').textContent = currentTime[2];
+            document.querySelector('[data-digit="m2"]').querySelector('.card-face-front').textContent = currentTime[3];
+            document.querySelector('[data-digit="s1"]').querySelector('.card-face-front').textContent = currentTime[4];
+            document.querySelector('[data-digit="s2"]').querySelector('.card-face-front').textContent = currentTime[5];
+          }
+          lastTime = currentTime;
+        }
+        document.querySelector('.ampm').textContent = ampm;
       }
+
       setInterval(updateClock, 1000);
       updateClock();
     </script>
