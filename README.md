@@ -6,3 +6,5 @@ You can use the github page link of the wallpaper directly in the app.
 Attribution:
 The following library is used in the demo:
 [Vanta](https://github.com/tengbao/vanta)
+
+[Next-level frosted glass with backdrop-filter](https://www.joshwcomeau.com/css/backdrop-filter/)
