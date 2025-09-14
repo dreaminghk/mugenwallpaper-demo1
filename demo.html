@@ -164,5 +164,33 @@
       setInterval(updateClock, 1000);
       updateClock();
     </script>
+  <div class="animated-link-container">
+      <a href="https://www.mugenwallpaper.com" target="_blank" class="animated-link">MuGen Wallpaper</a>
+    </div>
+    <style>
+      .animated-link-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+
+      .animated-link {
+        color: white;
+        text-decoration: none;
+        font-family: sans-serif;
+        font-size: 16px;
+        animation: breathing-glow 3s infinite ease-in-out;
+      }
+
+      @keyframes breathing-glow {
+        0%, 100% {
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        50% {
+          text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+        }
+      }
+    </style>
   </body>
 </html>
