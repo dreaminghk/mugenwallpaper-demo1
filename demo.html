@@ -136,6 +136,9 @@
         font-size: 72px;
         font-family: sans-serif;
       }
+      .ampm-text {
+        font-size: 36px;
+      }
       .clock-backdrop {
         position: absolute;
         inset: 0;
@@ -159,7 +162,7 @@
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const seconds = now.getSeconds().toString().padStart(2, '0');
         const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-        document.getElementById('clock-content-wrapper').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+        document.getElementById('clock-content-wrapper').innerHTML = `${hours}:${minutes}:${seconds} <span class="ampm-text">${ampm}</span>`;
       }
       setInterval(updateClock, 1000);
       updateClock();
