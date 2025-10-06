@@ -1,0 +1,8 @@
+{
+    "title": "Interactive Bird By MUGEN Wallpaper",     
+    "description": "Interactive wallpaper created by MUGEN Wallpaper. Available in Github: https://github.com/dreaminghk/mugenwallpaper-demo1"  , 
+    "type": "web",               
+    "version": "1.0.0",
+    "thumbFilePath": "thumbnail.png",           
+    "entrypoint": "demo.html"
+}
