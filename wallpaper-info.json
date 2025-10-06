@@ -3,6 +3,6 @@
     "description": "Interactive wallpaper created by MUGEN Wallpaper. Available in Github: https://github.com/dreaminghk/mugenwallpaper-demo1"  , 
     "type": "web",               
     "version": "1.0.0",
-    "thumbFilePath": "thumbnail.png",           
+    "thumbFilePath": "thumbnail.gif",           
     "entrypoint": "demo.html"
 }
